@@ -1,8 +1,18 @@
 package edu.ib;
 
+
+
+import javax.sql.rowset.CachedRowSet;
 import java.sql.*;
+import java.util.ArrayList;
+
 public class Tester {
     public static void main(String[] args) {
+
+        ArrayList<MovieCharacter> movieCharacters= new ArrayList<>();
+        movieCharacters.add(new MovieCharacter(300,"Nikodem","Dyzma",45));
+        movieCharacters.add(new MovieCharacter(301,"Stanislaw","Wokulski",40));
+
 
         StringBuilder url=new StringBuilder();
         url.append("jdbc:mysql://");
@@ -10,8 +20,7 @@ public class Tester {
         url.append("dbMovie?");
         url.append("useUnicode=true&characterEncoding=utf-8");
         url.append("&user=root");
-        url.append("&password=eduibtest");
-        url.append("&serverTimeZone=CET");
+        url.append("&password=eduibtest");;
 
         String urlConnection=url.toString();
 
@@ -58,6 +67,32 @@ public class Tester {
             PreparedStatement deleteStm=connection.prepareStatement(deleteString);
             rowAffected=deleteStm.executeUpdate();
             System.out.println("Affected rows= " + rowAffected);
+
+            System.out.println("--------------------------------------");
+            String query="INSERT INTO table_mcharacters (id,first,last,age) VALUES (?,?,?,?);";
+            PreparedStatement multipleInsertStm=connection.prepareStatement(query);
+            for(MovieCharacter mc : movieCharacters){
+                multipleInsertStm.setInt(1,mc.getId());
+                multipleInsertStm.setString(2,mc.getFirst());
+                multipleInsertStm.setString(3, mc.getLast());
+                multipleInsertStm.setInt(4,mc.getAge());
+                multipleInsertStm.addBatch();
+            }
+            multipleInsertStm.executeBatch();
+
+
+            PreparedStatement insertMultipleCheckStm=connection.prepareStatement(
+                    "SELECT * FROM table_mcharacters;");
+            ResultSet rsMultipleTableCheck=insertMultipleCheckStm.executeQuery();
+            printResultSet(rsMultipleTableCheck);
+
+//            CachedRowSet  cachedRowSet;
+//            cachedRowSet= new CachedRowSetWrapper();
+//            cachedRowSet.populate(rsMultipleTableCheck);
+
+
+
+
 
         }
         catch(SQLException e){

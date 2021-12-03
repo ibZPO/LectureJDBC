@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.10'
 }
 
 group 'edu.ib'
@@ -14,10 +16,18 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.27'
+   // https://mvnrepository.com/artifact/com.github.vldrus/cachedrowset-wrapper
+    implementation group: 'com.github.vldrus', name: 'cachedrowset-wrapper', version: '1.0.2'
 
+}
 
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls','javafx.fxml' ]
 }
 
 test {
     useJUnitPlatform()
 }
+
+mainClassName="edu.ib.MovieApp"
